@@ -1,0 +1,43 @@
+        <div class="modal-header">
+            Join the crew
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" role="form">
+              <div class="form-group" ng-class="{'has-error has-feedback' : errors.email != ''}">
+                  <div class="controls col-sm6">
+                      <input type="text" class="form-control" ng-model="join.email" ng-keyup="emailExists()" placeholder="Email" required autofocus>
+                  </div>
+                  <span ng-show="errors.email" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  <alert ng-show="errors.email" type="danger" ng-bind="errors.email"></alert>
+              </div>
+
+              <div class="form-group" ng-class="{'has-error has-feedback' : errors.username != ''}">
+                  <div class="controls col-sm6">
+                      <input type="text" class="form-control" ng-keyup="usernameExists()" ng-model="join.username" placeholder="Username" required>
+                  </div>
+                  <span ng-show="errors.username" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  <alert ng-show="errors.username" type="danger" ng-bind="errors.username"></alert>
+              </div>
+
+              <div class="form-group" ng-class="{'has-error has-feedback' : errors.password != ''}">
+                  <div class="controls col-sm6">
+                      <input type="password" class="form-control" ng-model="join.password" placeholder="Password" required>
+                  </div>
+                  <span ng-show="errors.password" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  <alert ng-show="errors.password" type="danger" ng-bind="errors.password"></alert>
+              </div>
+
+              <div class="form-group" ng-class="{'has-error has-feedback' : errors.password1 != ''}">
+                  <div class="controls class="col-sm6" >
+                      <input type="password" class="form-control" ng-model="join.password1" placeholder="Password" required>
+                  </div>
+                  <span ng-show="errors.password1" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                  <alert ng-show="errors.password1" type="danger" ng-bind="errors.password1"></alert>
+              </div>
+
+              <div class="form-group">
+                      <button class="btn btn-primary" ng-click="register()">Join</button>
+                </div>
+              </div>
+            </form>
+        </div>

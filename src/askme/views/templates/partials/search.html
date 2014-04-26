@@ -1,0 +1,34 @@
+<div>
+        <h1 class="cover-heading">Welcome to Ask<small>ME</small> </h1>
+        <p class="lead">Ask and you shall find the answer!</p>
+        <p class="lead">
+            <form ng-submit="askQuestion()" role="form" class="form-inline">
+                <div class="large-12 columns">
+                    <div class="row">
+                        <div class="col-md-10 col-xs-6">
+                            <label class="sr-only" for="question">Ask a question...</label>
+
+                            <input ng-model="question"
+                                   type="text"
+                                   class="form-control input-lg"
+                                   placeholder="Ask a question..."
+                                   typeahead="question for question in getQuestions($viewValue) | filter:$viewValue"
+                                   typeahead-min-length="3"
+                                   typeahead-wait-ms="100"
+
+                                   />
+
+                            <!--
+        popover="Start typing. Maybe your question has been asked already!"
+        popover-trigger="focus"
+        popover-animatino="true" -->
+                        </div>
+                        <div class="col-md-2 col-xs-6">
+                            <button ng-click="askQuestion()"
+                                    ng-disabled="!allowSubmit(question)"
+                                    class="btn btn-lg">AskME</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
