@@ -9,3 +9,8 @@ pom.xml
 /.env
 *.log
 askme.log.*
+pom.xml.asc
+.lein-deps-sum
+.lein-repl-history
+.lein-plugins/
+.lein-failures
