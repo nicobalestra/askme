@@ -43,7 +43,6 @@
       (search-all-questions question page num-records))))
 
 
-
 (defn insert-question [user_id question]
   (decorate-korma!)
   (insert questions

@@ -31,9 +31,8 @@
    [com.postspectacular/rotor "0.1.0"]
    [postgresql/postgresql "9.1-901.jdbc4"]
    [liberator "0.11.0"]
-   [org.clojure/data.json "0.2.4"]]
-
-
+   [org.clojure/data.json "0.2.4"]
+   [clj-jwt "0.0.6"]]
   :cljsbuild {:builds
                [{:source-paths ["src-cljs"],
                  :compiler {:pretty-print false,

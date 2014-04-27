@@ -15,6 +15,7 @@
             [askme.logic.user :as user]
             [liberator.core :refer [resource defresource]]
             [clojure.data.json :as json]
+            [askme.logic.security]
             ))
 
 
@@ -217,13 +218,12 @@
 
 
   :post! (fn [ctx]
-            (timbre/info "Se sono qui il login e stato successfull " ctx)
             (cookies/put! :askme-session {:value (-> ctx :loggedin-user :id)})
             (session/put! :user (ctx :loggedin-user))
            {:value (-> ctx :loggedin-user :id)}
            )
-  
-  :post-redirect? (fn [ctx] 
+
+  :post-redirect? (fn [ctx]
                     {:location (format "/users/login/%s" (-> ctx :loggedin-user :username))})
 
   )

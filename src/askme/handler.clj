@@ -65,8 +65,22 @@
                 (throw ex)))))))
     handler))
 
+(defn jwt-check [handler]
+  (fn [request]
+    (if-let [jwt-token (get-in request [:headers "token"])]
+      (let [decrypted jwt-token]
+        (timbre/info "Token found in http request header.. need to decrypt")
+        (-> (handler request)
+            (assoc :auth decrypted)))
+      (do
+        (timbre/info "token header not found")
+        (handler request)))))
+
+(defn liberator-tracer [handler]
+  (wrap-trace handler :header :ui))
+
 (def app
  (middleware/app-handler [liberator-res askme-rest-routes cljs-routes auth-routes auth-rest static-routes app-routes]
-   :middleware  [template-error-page (fn [handler] (wrap-trace handler :header :ui))]
+   :middleware  [template-error-page liberator-tracer jwt-check ]
    :access-rules []
    :formats [:json :json-kw :edn]))

@@ -39,8 +39,9 @@
     (content-type (response {:response "ok" :results res}) "application/json")))
 
 (defroutes askme-rest-routes
-      (POST "/questions/ask"  {:keys [body-params]}
-            (askme-question (get body-params "question")))
-      ;(GET  "/questions/recents" [] (get-recent))
-      (GET  "/user/question" {:keys [params]}
-            (search-question  (get params :q) (session/get! :user))))
+     ;(POST "/questions/ask"  {:keys [body-params]}
+     ;   (askme-question (get body-params "question"))
+  )
+                                        ;(GET  "/questions/recents" [] (get-recent))
+                                        ;(GET  "/user/question" {:keys [params]}
+                                        ;      (search-question  (get params :q) (session/get! :user))

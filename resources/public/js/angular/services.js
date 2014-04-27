@@ -4,9 +4,9 @@ askmeServices.factory('AskMEService', ['$resource',
   function($resource){
     return $resource('/questions/ask', {}, {
       ask: {method:'POST'},
-      allRecents : {
+      search : {
                     method: "GET",
-                    url: "/questions/recents"
+                    url: "/questions/search"
                    }
     });
   }]);

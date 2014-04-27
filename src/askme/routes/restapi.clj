@@ -56,7 +56,27 @@
 
 )
 
+(defn search-question [query user ]
+  (timbre/info "Call to search question with query " query " and user " user)
+  (let [res (questions/search-questions query 1 MAX-PAGE-SIZE user)]
+     (if-not (empty? res)
+        (timbre/info "Found matches " res)
+        (timbre/info "No matches found"))
+    (content-type (response {:response "ok" :results res}) "application/json")))
+
+
+(defresource search-question-res [question]
+  :allowed-methods [:get]
+  :available-media-types ["application/json"]
+  :handle-ok (fn [ctx]
+               (let [user (session/get! :user)
+                     res (questions/search-questions question 1 MAX-PAGE-SIZE user)]
+                    (json/write-str res :value-fn jsonify)))
+  )
+
 
 (defroutes liberator-res
   (ANY "/questions/ask/:question" [question]   (ask-question question))
-  (GET "/questions/recents" [] (get-recent)))
+  (GET "/questions/recents" [] (get-recent))
+  (GET "/questions/search" {:keys [params]}
+            (search-question-res  (get params :q))))
