@@ -17,8 +17,11 @@ askmeServices.factory('AskMEService', ['$resource',
 
 askmeServices.factory("LoginService", ["$resource",
   function($resource){
-     return $resource("/users/login/", {}, {
-        login : {method: "POST"},
+     return $resource("/users/login", {}, {
+        login : {method: "POST",
+                 headers: {
+                     "Content-Type" : "application/json"
+                 }},
         logout : {method: "POST", url: "/users/logout"}
      });
   }]);

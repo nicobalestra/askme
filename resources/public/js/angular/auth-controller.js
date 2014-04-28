@@ -1,4 +1,3 @@
-
 askMeApp.controller('authController', function($scope, $http, $modal, LoginService){
 
   $scope.openLogin = function() {
@@ -65,7 +64,7 @@ askMeApp.controller('LoginModalController', function($scope, $modalInstance, Log
   $scope.ok = function(){
 
     LoginService.login(angular.toJson($scope.login), function(res){
-      if (res.result){
+      if (res.id){
         $scope.$parent.$broadcast('userLoggedIn',{user : res});
         $modalInstance.close();
       }
