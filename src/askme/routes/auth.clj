@@ -15,8 +15,7 @@
             [askme.logic.user :as user]
             [liberator.core :refer [resource defresource]]
             [clojure.data.json :as json]
-            [askme.logic.security]
-            ))
+            [askme.logic.security :as security]))
 
 
 (defn valid? [email username pass pass1]
@@ -199,11 +198,9 @@
                (json/write-str (dissoc (:loggedin-user ctx) :password) :value-fn jsonify))
 
   :authorized? (fn [{{request-method :request-method} :request}]
-                 (if (and (= request-method :get)
-                          login-name
-                          (user/is-anonymous))
-                   [false {:message "You need to login to perform this API call"}]
-                   true))
+                 [(not (and (= request-method :get)
+                            login-name
+                            (user/is-anonymous))) {:message "You need to login to perform this API call"}])
   :post-to-existing? (fn [{{request-method :request-method} :request}]
                        (= request-method :post))
   :exists? (fn [{{username "username" password "password"} ::data {request-method :request-method} :request}]
@@ -215,18 +212,12 @@
                                 [(user/check-login (:loggedin-user return-map) username password) return-map])]
                     (timbre/info "exists? returning " return)
                     return)))
-
-
   :post! (fn [ctx]
-            (cookies/put! :askme-session {:value (-> ctx :loggedin-user :id)})
             (session/put! :user (ctx :loggedin-user))
-           {:value (-> ctx :loggedin-user :id)}
-           )
-
-  :post-redirect? (fn [ctx]
-                    {:location (format "/users/login/%s" (-> ctx :loggedin-user :username))})
-
-  )
+           {:message  (-> ctx
+                        :loggedin-user
+                        (dissoc :password)
+                        (assoc :jwt (security/new-token)))}))
 
 
 (defroutes auth-rest

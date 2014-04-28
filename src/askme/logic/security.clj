@@ -3,7 +3,7 @@
             [clj-jwt.key :refer [private-key]]
             [clj-time.core :refer [now plus days]]))
 
-(def ^private DEFAULT_SECRET "This is just a demo secret")
+(def ^:private DEFAULT_SECRET "This is just a demo secret")
 
 (def claim
   {:iss "AskME"
@@ -12,7 +12,7 @@
 
 
 
-(defn new-token
+(defn new-token []
   (-> claim jwt (sign :HS256 DEFAULT_SECRET) to-str))
 
 (defn verify-token [token]

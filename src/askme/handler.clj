@@ -12,7 +12,8 @@
             [askme.models.schema :as schema]
             [askme.routes.cljsexample :refer [cljs-routes]]
             [askme.routes.restapi :refer [liberator-res]]
-            [liberator.dev :refer [wrap-trace]]))
+            [liberator.dev :refer [wrap-trace]]
+            [askme.logic.security :as security]))
 
 (defroutes app-routes
   (route/resources "/")
@@ -68,8 +69,8 @@
 (defn jwt-check [handler]
   (fn [request]
     (if-let [jwt-token (get-in request [:headers "token"])]
-      (let [decrypted jwt-token]
-        (timbre/info "Token found in http request header.. need to decrypt")
+      (let [decrypted (security/verify-token jwt-token)]
+        (timbre/info "Token found in http request header.. need to decrypt: " decrypted)
         (-> (handler request)
             (assoc :auth decrypted)))
       (do
