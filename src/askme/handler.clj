@@ -68,11 +68,11 @@
 
 (defn jwt-check [handler]
   (fn [request]
-    (if-let [jwt-token (get-in request [:headers "token"])]
-      (let [decrypted (security/verify-token jwt-token)]
-        (timbre/info "Token found in http request header.. need to decrypt: " decrypted)
+    (if-let [jwt-token (get-in request [:headers "Authorization"])]
+      (if  (security/verify-token jwt-token)
         (-> (handler request)
-            (assoc :auth decrypted)))
+            (assoc :auth decrypted))
+        (handler request))
       (do
         (timbre/info "token header not found")
         (handler request)))))

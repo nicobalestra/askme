@@ -9,8 +9,6 @@ askMeApp.controller('authController', function($scope, $http, $modal, LoginServi
 
     modalLogin.result.then(function (loggedIn){
 
-       console.log("called");
-
     }, function(){
 
         console.log("Modal dismissed");
@@ -48,7 +46,7 @@ askMeApp.controller('authController', function($scope, $http, $modal, LoginServi
 
 
 /* LOGIN MODAL CONTROLLER */
-askMeApp.controller('LoginModalController', function($scope, $modalInstance, LoginService) {
+askMeApp.controller('LoginModalController', function($scope, $window, $modalInstance, LoginService) {
 
   $scope.login = {
     username: "",
@@ -65,7 +63,11 @@ askMeApp.controller('LoginModalController', function($scope, $modalInstance, Log
 
     LoginService.login(angular.toJson($scope.login), function(res){
       if (res.id){
+        console.log("User successfully logged in: " + res.id);
+        console.log( "JWT:" + res.jwt );
+
         $scope.$parent.$broadcast('userLoggedIn',{user : res});
+        $window.sessionStorage.token = res.jwt;
         $modalInstance.close();
       }
       else

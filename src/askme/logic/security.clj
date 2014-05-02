@@ -16,4 +16,7 @@
   (-> claim jwt (sign :HS256 DEFAULT_SECRET) to-str))
 
 (defn verify-token [token]
-  (-> token str->jwt (verify DEFAULT_SECRET)))
+  (let [token (if (.startsWith token "Bearer ")
+                (subs "Bearer " token)
+                token)]
+    (-> token str->jwt (verify DEFAULT_SECRET))))

@@ -1,8 +1,31 @@
 var askMeApp = angular.module('askMeApp', ['askmeServices', "ui.bootstrap", "ngRoute"]);
 
-askMeApp.config(["$routeProvider", "$locationProvider", function($routeProvider, $locationProvider){
+//Configure the app to always include the bearer JWT token if it is present
+//in the session storage.
+askMeApp.factory('authInterceptor', function ($rootScope, $q, $window) {
+  return {
+    request: function (config) {
+        console.log("In http interceptor");
+      config.headers = config.headers || {};
+      if ($window.sessionStorage.token) {
+        config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+      }
+      return config;
+    },
+    response: function (response) {
+      if (response.status === 401) {
+        throw Error("Not Authenticated");
+      }
 
+      return response || $q.when(response);
+    }
+  };
+});
 
+askMeApp.config(["$routeProvider", "$locationProvider", "$httpProvider", function($routeProvider, $locationProvider, $httpProvider){
+
+  //Add the newly defined interceptor for injecting JWT token
+  $httpProvider.interceptors.push('authInterceptor');
 
   $routeProvider
     .when("/",
