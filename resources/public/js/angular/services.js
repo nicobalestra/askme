@@ -4,10 +4,9 @@ askmeServices.factory('AskMEService', ['$resource',
   function($resource){
     return $resource('/questions/ask', {}, {
       ask: {method:'POST'},
-      search : {
-                    method: "GET",
-                    url: "/questions/search"
-                   }
+      search : {method: "GET",
+                url: "/questions/search",
+                isArray: true}
     });
   }]);
 
@@ -18,10 +17,8 @@ askmeServices.factory('AskMEService', ['$resource',
 askmeServices.factory("LoginService", ["$resource",
   function($resource){
      return $resource("/users/login", {}, {
-        login : {method: "POST",
-                 headers: {
-                     "Content-Type" : "application/json"
-                 }},
+        login : {method: "POST"},
+
         logout : {method: "POST", url: "/users/logout"}
      });
   }]);

@@ -35,8 +35,9 @@ askMeApp.controller('authController', function($scope, $http, $modal, LoginServi
   $scope.logout = function(){
 
     LoginService.logout();
-
+    $window.sessionStorage.token = null;
     console.log($scope);
+
     $scope.$parent.$parent.$broadcast('userLoggedOut');
 
 

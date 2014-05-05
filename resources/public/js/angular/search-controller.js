@@ -1,6 +1,6 @@
-askMeApp.controller("SearchFormController", ['$scope','$http', 'AskMEService', '$location', '$route', 'Recents',
+askMeApp.controller("SearchFormController", ['$scope','$http', 'AskMEService', '$location', '$route', 'Recents', 'auth',
 
-function($scope, $http, AskMEService, $location, $route, Recents){
+function($scope, $http, AskMEService, $location, $route, Recents, auth){
 
   $scope.allowSubmit = function(question){
     return question != 'undefined' &&
@@ -19,30 +19,47 @@ function($scope, $http, AskMEService, $location, $route, Recents){
 //If I've already asked the question, go to the question
 //If I haven't already asked the question, ask the question and show similar questions
 
-    if ($scope.userLoggedIn()) {
-        AskMEService.ask({"question" : $scope.question},
-                         function(resp){
+ if (auth.isUserLoggedin()) {
+    console.log("User is logged in...");
+    AskMEService.ask({"question" : $scope.question},
+        function(resp){
+            if (resp.response == "ok" && resp.result.length == 0){
+               resp = AskMEService.allRecents(
+                        function(resp){
+                            console.log("Query for all recent questions");
+                            console.log(resp);
+                            $scope.answers = resp.result;
+                            Recents.recents = resp.result;
+                            $location.path("/recents");
 
-                             if (resp.response == "ok" && resp.result.length == 0){
-                                 resp = AskMEService.allRecents(
-                                     function(resp){
-                                         console.log("Query for all recent questions");
-                                         console.log(resp);
-                                         $scope.answers = resp.result;
-                                         Recents.recents = resp.result;
-                                         $location.path("/recents");
-
-                                     });
-                             } else {
-                                 $scope.answers = resp.result;
-                                 $location.path("/my-questions.html").replace();
-                             }
-          });
-
-
+                        });
+            } else {
+                $scope.answers = resp.result;
+                $location.path("/my-questions.html").replace();
+            }
+        });
     } else{
-        //
-        AskMEService.search({"question" : $scope.question}, function(resp) {console.log("Call to AskMEService.search with " + res);});
+        //Anonymous user. First search for the message. If none is found search for recents
+        AskMEService.search({"q" : $scope.question},
+                            function(resp) {
+                                //Expecting an array
+                                if (resp!=null && resp.length > 0) {
+                                    console.log("Call to AskMEService.search with " + resp);
+
+
+                                }
+                                else{
+                                    //Should do something when no results are found.. probably going to
+                                    //the latest questions...
+                                    console.log("No results found..");
+                                    AskMEService.search(function(resp){
+                                        console.log("Since no results were found I searched for all recent questions...");
+                                        Recents.recents = resp;
+                                        $location.path("/recents");
+
+                                    });
+                                }
+                            });
     }
 
   };
@@ -50,7 +67,7 @@ function($scope, $http, AskMEService, $location, $route, Recents){
   $scope.getQuestions = function(query) {
   console.log("Get questions..");
 
-    return $http.get("/questions/search", {
+      return $http.get("/questions/search", {
               params: {
                 q: query
               }

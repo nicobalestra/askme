@@ -71,7 +71,7 @@
     (if-let [jwt-token (get-in request [:headers "Authorization"])]
       (if  (security/verify-token jwt-token)
         (-> (handler request)
-            (assoc :auth decrypted))
+            (assoc :auth true))
         (handler request))
       (do
         (timbre/info "token header not found")
