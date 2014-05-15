@@ -15,13 +15,8 @@
                                    typeahead="question for question in getQuestions($viewValue) | filter:$viewValue"
                                    typeahead-min-length="3"
                                    typeahead-wait-ms="100"
-
                                    />
 
-                            <!--
-        popover="Start typing. Maybe your question has been asked already!"
-        popover-trigger="focus"
-        popover-animatino="true" -->
                         </div>
                         <div class="col-md-2 col-xs-6">
                             <button ng-click="askQuestion()"

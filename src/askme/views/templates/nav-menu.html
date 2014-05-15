@@ -1,20 +1,18 @@
 <nav class="masthead clearfix" ng-controller="authController">
     <div class="inner">
-        <h3 class="masthead-brand"><a href="{{servletContext}}">Ask<small>ME</small></a>
-            </h3>
+        <h3 class="masthead-brand"><a href="{{servletContext}}">Ask<small>ME</small></a> </h3>
+        <div class="nav masthead-nav" ng-switch on="{{loggedIn}}">
 
-        <div class="nav masthead-nav">
-            [% if user %]
-                <span>Hello [{user.username }]</span>
+           <div ng-switch-when="true">
+                <span>Hello {{auth.getUser().username}}</span>
                 <button class="btn btn-primary" ng-click="logout()">Logout</button>
-            [% else %]
+           </div>
+           <div ng-switch-when="false">
                 <button class="btn btn-primary" ng-click="openLogin()">Login</button>
                 <button class="btn btn-info" ng-click="openJoin()">Join</button>
-
-            [% endif %]
+           </div>
         </div>
 
 
     </div>
 </nav>
-

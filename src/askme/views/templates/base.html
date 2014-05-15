@@ -21,7 +21,7 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-<script type='text/javascript' id='lt_ws' src='http://localhost:44238/socket.io/lighttable/ws.js'></script>
+
   </head>
 
   <body>
@@ -34,12 +34,13 @@
 
             <div role="navigation" ng-controller="navController" ng-include="navbarUrl">
             </div>
+
           <div class="inner cover">
 
             <div>
-				[% block content %]
-				[% endblock %]
-			</div>
+	      [% block content %]
+	      [% endblock %]
+	    </div>
 
           </div>
 
@@ -73,6 +74,7 @@
     [% script "/js/angular/search-controller.js" %]
     [% script "/js/angular/nav-controller.js" %]
     [% script "/js/angular/recents-controller.js" %]
+    [% script "/js/angular/auth-app.js" %]
     [% script "/js/ui-bootstrap.js" %]
 
   </body>

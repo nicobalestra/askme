@@ -30,11 +30,18 @@
         java.lang.String body
         (slurp (clj-io/reader body))))))
 
+(defn- drop-charset
+  "Drop the charset spec from the content-type string"
+  [content-type]
+  (if (pos? (.indexOf content-type ";"))
+    (subs content-type 0 (.indexOf content-type ";"))
+    content-type))
+
 ;; For PUT and POST check if the content type is json.
 (defn check-content-type [ctx content-types]
-  (if (#{:put :post} (get-in ctx [:request :request-method]))
+   (if (#{:put :post} (get-in ctx [:request :request-method]))
     (or
-     (some #{(get-in ctx [:request :headers "content-type"])}
+     (some #{(drop-charset (get-in ctx [:request :headers "content-type"]))}
            content-types)
      [false {:message "Unsupported Content-Type"}])
     true))

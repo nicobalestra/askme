@@ -23,6 +23,8 @@ function($scope, $http, AskMEService, $location, $route, Recents, auth){
     console.log("User is logged in...");
     AskMEService.ask({"question" : $scope.question},
         function(resp){
+            console.log("Response from ask service...");
+            console.log(resp);
             if (resp.response == "ok" && resp.result.length == 0){
                resp = AskMEService.allRecents(
                         function(resp){

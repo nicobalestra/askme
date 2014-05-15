@@ -25,7 +25,6 @@
   :known-content-type? #(check-content-type % ["application/json"])
   :handle-ok   (fn [ctx]
                  (timbre/info "*** Get /question/" question " ***")
-                 (timbre/info "REQUEST: " ctx)
                  (let [response-json (-> (session/get! :user)
                                          (search-question  question)
                                          (json/write-str :value-fn jsonify))]

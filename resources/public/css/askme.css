@@ -239,3 +239,9 @@ body {
   padding: 2px;
   line-height: default;
 }
+
+
+/* list of messages */
+#questions-list h4 {
+    text-align : left;
+}

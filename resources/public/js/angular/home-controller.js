@@ -1,14 +1,5 @@
 var askMeApp = angular.module('askMeApp', ['askmeServices', "ui.bootstrap", "ngRoute"]);
 
-askMeApp.factory("auth", function($window){
-    return {
-        isUserLoggedin : function(){
-            return ($window.sessionStorage.token != undefined &&
-                    $window.sessionStorage.token !== null &&
-                    $window.sessionStorage.token != "");
-        }
-    }
-});
 
 
 //Configure the app to always include the bearer JWT token if it is present
@@ -17,7 +8,6 @@ askMeApp.factory("auth", function($window){
   askMeApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function ($rootScope, $q, $window) {
   return {
     request: function (config) {
-        console.log("In http interceptor");
       config.headers = config.headers || {};
       //By default communicate using application/json
       if (!config.headers["Content-Type"]) {
@@ -25,13 +15,13 @@ askMeApp.factory("auth", function($window){
       }
 
       if ($window.sessionStorage.token) {
+          console.log("Adding Authorization header to http request");
         config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
       }
       return config;
     },
     response: function (response) {
-        console.log("http interceptor response:");
-        console.log(response);
+
       if (response.status === 401) {
         throw Error("Not Authenticated");
       }
@@ -44,8 +34,9 @@ askMeApp.factory("auth", function($window){
 
 askMeApp.config(["$routeProvider", "$locationProvider", "$httpProvider", function($routeProvider, $locationProvider, $httpProvider){
 
-  //Add the newly defined interceptor for injecting JWT token
-  $httpProvider.interceptors.push('authInterceptor');
+    //Add the newly defined interceptor for injecting JWT token
+    $httpProvider.interceptors.push('authInterceptor');
+    $locationProvider.html5Mode(true).hashPrefix("!");
 
   $routeProvider
     .when("/",

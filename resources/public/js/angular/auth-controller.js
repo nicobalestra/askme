@@ -1,5 +1,6 @@
-askMeApp.controller('authController', function($scope, $http, $modal, LoginService){
+askMeApp.controller('authController', ["$scope", "$http", "$modal", "$window", "LoginService", "auth", function($scope, $http, $modal, $window, LoginService, auth){
 
+  $scope.auth = auth;
   $scope.openLogin = function() {
 
     var modalLogin = $modal.open({
@@ -35,19 +36,18 @@ askMeApp.controller('authController', function($scope, $http, $modal, LoginServi
   $scope.logout = function(){
 
     LoginService.logout();
+    console.log("Logging out.. removing session token");
     $window.sessionStorage.token = null;
-    console.log($scope);
-
     $scope.$parent.$parent.$broadcast('userLoggedOut');
 
 
   }
 
-});
+}]);
 
 
 /* LOGIN MODAL CONTROLLER */
-askMeApp.controller('LoginModalController', function($scope, $window, $modalInstance, LoginService) {
+askMeApp.controller('LoginModalController', function($scope, $window, $modalInstance, LoginService, auth) {
 
   $scope.login = {
     username: "",
@@ -65,10 +65,10 @@ askMeApp.controller('LoginModalController', function($scope, $window, $modalInst
     LoginService.login(angular.toJson($scope.login), function(res){
       if (res.id){
         console.log("User successfully logged in: " + res.id);
+        console.log(res);
         console.log( "JWT:" + res.jwt );
+        auth.login($scope, res);
 
-        $scope.$parent.$broadcast('userLoggedIn',{user : res});
-        $window.sessionStorage.token = res.jwt;
         $modalInstance.close();
       }
       else

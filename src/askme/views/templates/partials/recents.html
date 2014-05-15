@@ -1,11 +1,11 @@
 <div ng-controller="recentQuestionsController">
- <div class="questions">
-    <div ng-repeat="current in container.recents">
-      <div class="question-{{$index}}">
-          <div class="question">{{current.question}}</div>
-          <div class="user">{{current.username}}</div>
-
-    </div>
+ <div id="questions-list">
+   <accordion close-others="true">
+       <accordion-group heading="{{current.question}}" ng-repeat="current in container.recents">
+           <div class="user">{{current.username}}</div>
+           <div class="timestamp">{{current.timestamp}}</div>
+       </accordion-group>
+   </accordion>
  </div>
 
 </div>
