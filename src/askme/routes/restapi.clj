@@ -30,14 +30,17 @@
                                          (json/write-str :value-fn jsonify))]
                      response-json))
 
-  :malformed? #(parse-json % ::data)
-  :authorized? (fn [{{method :request-method } :request}]
-                   [(not (and (= method :post) (user/is-anonymous)))  {:message "You need to login to ask a question"}]
+  :malformed? #(parse-json % ::data) ;here I should also check that the format of the passed json is correct
+  :authorized? (fn [{request :request}]
+                 (let [method (get request :request-method )
+                       authorized (or (not= method :post)
+                                      (and (= method :post) (not (user/is-anonymous request))))]
+                   [authorized  {:message "You need to login to ask a question"}])
                )
   :available-media-types ["application/json"]
   :allowed-methods [:post :get]
   :post! (fn [ctx]
-           (let [question (get ctx ::data)]
+           (let [question  (get-in ctx [::data "question"])]
              (timbre/info "Insert new question " question)
              (-> (session/get! :user)
                  (questions/insert-question question)
@@ -75,7 +78,7 @@
 
 
 (defroutes liberator-res
-  (ANY "/questions/ask/:question" [question]   (ask-question question))
+  (ANY "/questions/ask" [question]   (ask-question question))
   (GET "/questions/recents" [] (get-recent))
   (GET "/questions/search" {:keys [params]}
             (search-question-res  (get params :q))))

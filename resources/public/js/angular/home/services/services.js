@@ -3,7 +3,7 @@ var askmeServices = angular.module('askmeServices', ['ngResource']);
 askmeServices.factory('AskMEService', ['$resource',
   function($resource){
     return $resource('/questions/ask', {}, {
-        ask: {method:'GET',
+        ask: {method:'POST',
               url: "/questions/ask/:question"
            },
         search : {method: "GET",

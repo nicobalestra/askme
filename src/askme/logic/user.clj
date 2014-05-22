@@ -6,8 +6,9 @@
 
 (defn is-anonymous
   "Determines whether currently we have a loggedin user"
-  []
-  (= :not-found (session/get :user :not-found)))
+  [request]
+                                        ;(= :not-found (session/get :user :not-found))
+  (get request :auth))
 
 (defn get-user []
   (session/get :user))
