@@ -1,6 +1,6 @@
-askMeApp.controller("SearchFormController", ['$scope','$http', 'AskMEService', '$location', '$route', 'Recents', 'auth',
+askMeApp.controller("SearchFormController", ['$scope','$http', 'AskMEService', '$location', '$route', 'Recents', 'auth', '$log',
 
-function($scope, $http, AskMEService, $location, $route, Recents, auth){
+function($scope, $http, AskMEService, $location, $route, Recents, auth, $log){
 
   $scope.allowSubmit = function(question){
     return question != 'undefined' &&
@@ -10,7 +10,7 @@ function($scope, $http, AskMEService, $location, $route, Recents, auth){
 
   $scope.askQuestion = function(){
 //Need to perform a post
-    console.log("Asking a question " + $scope.question);
+    $log.debug("Asking a question " + $scope.question);
 
 //If anonymous, search for the same question.
 //if question(s) exists, show'em
@@ -20,16 +20,16 @@ function($scope, $http, AskMEService, $location, $route, Recents, auth){
 //If I haven't already asked the question, ask the question and show similar questions
 
  if (auth.isUserLoggedin()) {
-    console.log("User is logged in...");
+    $log.debug("User is logged in...");
     AskMEService.ask({"question" : $scope.question},
         function(resp){
-            console.log("Response from ask service...");
-            console.log(resp);
+            $log.debug("Response from ask service...");
+            $log.debug(resp);
             if (resp.response == "ok" && resp.result.length == 0){
                resp = AskMEService.allRecents(
                         function(resp){
-                            console.log("Query for all recent questions");
-                            console.log(resp);
+                            $log.debug("Query for all recent questions");
+                            $log.debug(resp);
                             $scope.answers = resp.result;
                             Recents.recents = resp.result;
                             $location.path("/recents");
@@ -46,16 +46,16 @@ function($scope, $http, AskMEService, $location, $route, Recents, auth){
                             function(resp) {
                                 //Expecting an array
                                 if (resp!=null && resp.length > 0) {
-                                    console.log("Call to AskMEService.search with " + resp);
+                                    $log.debug("Call to AskMEService.search with " + resp);
 
 
                                 }
                                 else{
                                     //Should do something when no results are found.. probably going to
                                     //the latest questions...
-                                    console.log("No results found..");
+                                    $log.debug("No results found..");
                                     AskMEService.search(function(resp){
-                                        console.log("Since no results were found I searched for all recent questions...");
+                                        $log.debug("Since no results were found I searched for all recent questions...");
                                         Recents.recents = resp;
                                         $location.path("/recents");
 

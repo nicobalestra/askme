@@ -1,3 +1,5 @@
+//Configure the app to always include the bearer JWT token if it is present
+//in the session storage
 askMeApp.factory('authInterceptor', ["$rootScope", "$q", "$window", function ($rootScope, $q, $window) {
   return {
     request: function (config) {

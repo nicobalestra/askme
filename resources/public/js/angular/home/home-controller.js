@@ -1,13 +1,3 @@
-var askMeApp = angular.module('askMeApp', ['askmeServices', "ui.bootstrap", "ngRoute"]);
-
-
-
-//Configure the app to always include the bearer JWT token if it is present
-//in the session storage
-
-
-
-
 askMeApp.config(["$routeProvider", "$locationProvider", "$httpProvider", function($routeProvider, $locationProvider, $httpProvider){
 
     //Add the newly defined interceptor for injecting JWT token
